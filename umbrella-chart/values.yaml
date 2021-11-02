@@ -21,19 +21,21 @@ clusterautoscaler:
   # awsSecretAccessKey -- AWS access secret key ([if AWS user keys used](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md#using-aws-credentials))
   awsSecretAccessKey: ""
 
-  expanderPriorities: {
-      20:
-      - spot-nodes.*
-      10:
-      - .*
-  }
+  serviceMonitor:
+    enabled: false
+
+  expanderPriorities: |-
+    20:
+    - spot-nodes.*
+    10:
+    - .*
 
 aws-node-termination-handler: 
-    image:
-    repository: public.ecr.aws/aws-ec2/aws-node-termination-handler
-    tag: v1.14.0
-    pullPolicy: IfNotPresent
-    pullSecrets: []
+  image:
+  repository: public.ecr.aws/aws-ec2/aws-node-termination-handler
+  tag: v1.14.0
+  pullPolicy: IfNotPresent
+  pullSecrets: []
 
   fullnameOverride: ""
 
@@ -137,28 +139,31 @@ cluster-overprovisioner:
     
 
 cluster-proportional-autoscaler:
+  config: 
+    linear:
+      coresPerReplica: 50
   affinity: {}
   image:
-      repository: k8s.gcr.io/cpa/cluster-proportional-autoscaler
-      pullPolicy: IfNotPresent
-      tag:
-    fullnameOverride:
-    nodeSelector: {}
-    options:
-      maxSyncFailures:
-      namespace: ""
-      nodeLabels: {}
+    repository: k8s.gcr.io/cpa/cluster-proportional-autoscaler
+    pullPolicy: IfNotPresent
+    tag:
+  fullnameOverride:
+  nodeSelector: {}
+  options:
+    maxSyncFailures:
+    namespace: ""
+    nodeLabels: {}
       #    label1: value1
       #    label2: value2
-      pollPeriodSeconds:
-      stdErrThreshold:
-      target:
-      vmodule:
-    podAnnotations: {}
-    podSecurityContext: {}
-    # fsGroup: 2000
-    replicaCount: 1
-    resources: {}
+    pollPeriodSeconds:
+    stdErrThreshold:
+    target: deployment/
+    vmodule:
+  podAnnotations: {}
+  podSecurityContext: {}
+  # fsGroup: 2000
+  replicaCount: 1
+  resources: {}
       # We usually recommend not to specify default resources and to leave this as a conscious
       # choice for the user. This also increases chances charts run on environments with little
       # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -169,12 +174,12 @@ cluster-proportional-autoscaler:
       # requests:
       #   cpu: 100m
     #   memory: 128Mi
-    serviceAccount:
-      create: true
-      annotations: {}
+  serviceAccount:
+    create: true
+    annotations: {}
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       # If set and create is false, no service account will be created and the expectation is that the provided service account already exists or it will use the "default" service account
-      name:
-    tolerations: []
+    name:
+  tolerations: []
 
