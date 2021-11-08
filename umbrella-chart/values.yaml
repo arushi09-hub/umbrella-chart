@@ -119,7 +119,7 @@ aws-node-termination-handler:
 
 
 cluster-overprovisioner: 
-  fullnameOverride: ""
+  fullnameOverride: "over-provisioner"
   deployments:
   - name: spot
     replicaCount: 1
